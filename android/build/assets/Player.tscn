@@ -1,0 +1,149 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://art/Bacili_Walking_Sprite_2.png" type="Texture" id=3]
+[ext_resource path="res://Player.gd" type="Script" id=5]
+[ext_resource path="res://art/dodgerEye.png" type="Texture" id=6]
+[ext_resource path="res://art/shootSound.wav" type="AudioStream" id=7]
+[ext_resource path="res://Bullet.tscn" type="PackedScene" id=8]
+
+[sub_resource type="CapsuleShape2D" id=3]
+height = 16.9294
+
+[sub_resource type="CapsuleShape2D" id=4]
+
+[sub_resource type="Animation" id=18]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 1 ]
+}
+
+[sub_resource type="Animation" id=22]
+resource_name = "player_dead"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 9 ]
+}
+
+[sub_resource type="Animation" id=19]
+resource_name = "player_moving_up"
+length = 1.5
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.7, 1.1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 10, 11, 12, 13 ]
+}
+
+[sub_resource type="Animation" id=21]
+resource_name = "player_standing"
+length = 1.2
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.6, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 5, 6, 7, 8 ]
+}
+
+[sub_resource type="Animation" id=20]
+resource_name = "player_walking"
+length = 1.4
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.6, 0.9, 1.2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4 ]
+}
+
+[node name="Player" type="KinematicBody2D" groups=["player"]]
+position = Vector2( 240, 360 )
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_group_": true
+}
+preBullet = ExtResource( 8 )
+speed = 80
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( -2, 10 )
+scale = Vector2( 0.180609, 0.180609 )
+texture = ExtResource( 3 )
+hframes = 5
+vframes = 3
+frame = 1
+
+[node name="Pivot" type="Node2D" parent="."]
+position = Vector2( -3, -1 )
+scale = Vector2( 0.7, 0.7 )
+
+[node name="Sprite" type="Sprite" parent="Pivot"]
+position = Vector2( 2.85712, -1.42859 )
+rotation = 1.5708
+scale = Vector2( 0.378276, 0.378276 )
+texture = ExtResource( 6 )
+offset = Vector2( -1.23154, -18.9315 )
+
+[node name="shootSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+volume_db = 16.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -2, -2 )
+scale = Vector2( 2.34208, 1.57822 )
+shape = SubResource( 3 )
+
+[node name="Area" type="Area2D" parent="."]
+position = Vector2( -1, -6 )
+scale = Vector2( 0.990992, 1.22154 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area"]
+position = Vector2( -1, 4 )
+scale = Vector2( 2.90406, 1.62213 )
+shape = SubResource( 4 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 18 )
+anims/player_dead = SubResource( 22 )
+anims/player_moving_up = SubResource( 19 )
+anims/player_standing = SubResource( 21 )
+anims/player_walking = SubResource( 20 )
+
+[connection signal="body_entered" from="Area" to="." method="_on_Area_body_entered"]

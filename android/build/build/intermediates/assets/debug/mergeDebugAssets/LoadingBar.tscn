@@ -1,0 +1,80 @@
+[gd_scene load_steps=5 format=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.313726, 0.701961, 0.270588, 0.803922 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.580392, 0.498039, 0.486275, 1 )
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="Animation" id=3]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("ProgressBar:value")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "progressBar"
+length = 5.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("ProgressBar:value")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 100.0 ]
+}
+
+[node name="LoadingBar" type="CanvasLayer"]
+
+[node name="LoadingLabel" type="Label" parent="."]
+margin_left = 202.5
+margin_top = 590.0
+margin_right = 277.5
+margin_bottom = 616.0
+text = "Loading..."
+align = 1
+valign = 1
+
+[node name="pressToStartLabel" type="Label" parent="."]
+visible = false
+margin_left = 149.0
+margin_top = 630.0
+margin_right = 332.0
+margin_bottom = 656.0
+text = "Press Left Click to Start!"
+align = 1
+valign = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+margin_left = 90.0
+margin_top = 630.0
+margin_right = 390.0
+margin_bottom = 657.0
+custom_styles/fg = SubResource( 1 )
+custom_styles/bg = SubResource( 2 )
+step = 4.0
+
+[node name="ProgressBarAnim" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 3 )
+anims/progressBar = SubResource( 4 )

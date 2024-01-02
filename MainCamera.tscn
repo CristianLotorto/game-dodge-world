@@ -1,0 +1,55 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://art/sound.png" type="Texture" id=1]
+[ext_resource path="res://art/Mute.png" type="Texture" id=2]
+[ext_resource path="res://art/JoystickKnob.svg" type="Texture" id=4]
+[ext_resource path="res://Joystick.tscn" type="PackedScene" id=5]
+[ext_resource path="res://art/JoystickRing.svg" type="Texture" id=6]
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Camera2D
+
+
+
+
+"
+
+[sub_resource type="CircleShape2D" id=1]
+
+[node name="MainCamera" type="Camera2D"]
+position = Vector2( 240, 360 )
+z_index = 10
+editor_draw_limits = true
+editor_draw_drag_margin = true
+script = SubResource( 2 )
+
+[node name="AudioButton" type="TextureButton" parent="."]
+margin_left = -235.0
+margin_top = -356.0
+margin_right = 277.0
+margin_bottom = 156.0
+rect_scale = Vector2( 0.0481351, 0.0481351 )
+toggle_mode = true
+texture_normal = ExtResource( 1 )
+texture_pressed = ExtResource( 2 )
+
+[node name="Joystick" parent="." instance=ExtResource( 5 )]
+position = Vector2( -144, 264 )
+scale = Vector2( 0.25, 0.25 )
+
+[node name="Shoot" type="Sprite" parent="."]
+position = Vector2( 152, 256 )
+scale = Vector2( 0.0398173, 0.0398173 )
+texture = ExtResource( 6 )
+
+[node name="button" type="Sprite" parent="Shoot"]
+scale = Vector2( 1.53223, 1.53223 )
+texture = ExtResource( 4 )
+
+[node name="shoot1" type="TouchScreenButton" parent="Shoot/button"]
+scale = Vector2( 57.0755, 57.0755 )
+shape = SubResource( 1 )
+shape_centered = false
+action = "shoot"
+
+[connection signal="pressed" from="AudioButton" to="." method="_on_AudioButton_pressed"]

@@ -1,0 +1,73 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://art/JoystickRing.svg" type="Texture" id=3]
+[ext_resource path="res://art/JoystickKnob.svg" type="Texture" id=4]
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node2D
+
+
+var positionVector: Vector2
+"
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Sprite
+
+
+var pressing = false
+
+export var maxLength = 35
+export var deadzone = 5
+
+func _ready():
+	maxLength *= get_parent().scale.x*8
+	
+func _process(delta):
+	if pressing:
+		if get_global_mouse_position().distance_to(get_parent().global_position) <= maxLength:
+			global_position = get_global_mouse_position()
+		else:
+			var angle = get_parent().global_position.angle_to_point(get_global_mouse_position())
+			global_position.x = get_parent().global_position.x + -cos(angle)*maxLength
+			global_position.y = get_parent().global_position.y + -sin(angle)*maxLength
+		calculateVector()
+	else:
+		global_position = lerp(global_position, get_parent().global_position, delta*50)
+		get_parent().positionVector = Vector2(0,0)
+		
+func calculateVector():
+	if abs((global_position.x - get_parent().global_position.x)) >= deadzone:
+		get_parent().positionVector.x = (global_position.x - get_parent().global_position.x)/maxLength
+	if abs((global_position.y - get_parent().global_position.y)) >= deadzone:
+		get_parent().positionVector.y = (global_position.y - get_parent().global_position.y)/maxLength
+
+
+func _on_Button_pressed():
+	pressing = true
+
+func _on_Button_released():
+	pressing = false
+	GlobalVariables.eyePosition = get_parent().positionVector
+"
+
+[sub_resource type="CircleShape2D" id=1]
+
+[node name="AimStick" type="Node2D"]
+script = SubResource( 2 )
+
+[node name="Ring" type="Sprite" parent="."]
+scale = Vector2( 0.327, 0.327 )
+texture = ExtResource( 3 )
+
+[node name="AimKnob" type="Sprite" parent="."]
+scale = Vector2( 0.259, 0.259 )
+texture = ExtResource( 4 )
+script = SubResource( 3 )
+
+[node name="Button" type="TouchScreenButton" parent="."]
+scale = Vector2( 30.9832, 30.9832 )
+shape = SubResource( 1 )
+shape_centered = false
+
+[connection signal="pressed" from="Button" to="AimKnob" method="_on_Button_pressed"]
+[connection signal="released" from="Button" to="AimKnob" method="_on_Button_released"]

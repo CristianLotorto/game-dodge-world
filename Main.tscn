@@ -1,0 +1,93 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://ParallaxBackground.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Main.gd" type="Script" id=3]
+[ext_resource path="res://HUD.tscn" type="PackedScene" id=4]
+[ext_resource path="res://art/House In a Forest Loop.ogg" type="AudioStream" id=5]
+[ext_resource path="res://art/gameover.wav" type="AudioStream" id=6]
+[ext_resource path="res://Joystick.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Mob.tscn" type="PackedScene" id=9]
+[ext_resource path="res://art/sound.png" type="Texture" id=10]
+[ext_resource path="res://art/JoystickKnob.svg" type="Texture" id=11]
+[ext_resource path="res://art/JoystickRing.svg" type="Texture" id=12]
+[ext_resource path="res://art/Mute.png" type="Texture" id=13]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 480, 0, 0, 0, 0, 0, 480, 720, 0, 0, 0, 0, 0, 720, 0, 0, 0, 0, 0, 0 )
+}
+
+[sub_resource type="CircleShape2D" id=2]
+
+[node name="Main" type="Node"]
+script = ExtResource( 3 )
+mob_scene = ExtResource( 9 )
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+visible = false
+position = Vector2( 1624, 1464 )
+
+[node name="ParallaxBackground" parent="." instance=ExtResource( 2 )]
+
+[node name="HUD" parent="." instance=ExtResource( 4 )]
+visible = false
+
+[node name="ScoreTimer" type="Timer" parent="."]
+
+[node name="StartTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="MobTimer" type="Timer" parent="."]
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+
+[node name="StartPosition" type="Position2D" parent="."]
+position = Vector2( 240, 360 )
+
+[node name="MobPath" type="Path2D" parent="."]
+curve = SubResource( 1 )
+
+[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath"]
+
+[node name="AudioButton" type="TextureButton" parent="."]
+margin_left = -235.0
+margin_top = -356.0
+margin_right = 277.0
+margin_bottom = 156.0
+rect_scale = Vector2( 0.0481351, 0.0481351 )
+toggle_mode = true
+texture_normal = ExtResource( 10 )
+texture_pressed = ExtResource( 13 )
+
+[node name="Joystick" parent="." instance=ExtResource( 8 )]
+visible = false
+position = Vector2( 92, 632 )
+scale = Vector2( 0.225522, 0.225522 )
+
+[node name="Shoot" type="Sprite" parent="."]
+visible = false
+position = Vector2( 392, 632 )
+scale = Vector2( 0.0398173, 0.0398173 )
+texture = ExtResource( 12 )
+
+[node name="button" type="Sprite" parent="Shoot"]
+scale = Vector2( 1.53223, 1.53223 )
+texture = ExtResource( 11 )
+
+[node name="shoot1" type="TouchScreenButton" parent="Shoot/button"]
+scale = Vector2( 57.0755, 57.0755 )
+shape = SubResource( 2 )
+shape_centered = false
+action = "shoot"
+
+[connection signal="hit" from="Player" to="." method="game_over"]
+[connection signal="start" from="HUD" to="." method="start_game"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_on_ScoreTimer_timeout"]
+[connection signal="timeout" from="StartTimer" to="." method="_on_StartTimer_timeout"]
+[connection signal="timeout" from="MobTimer" to="." method="_on_MobTimer_timeout"]
+[connection signal="pressed" from="AudioButton" to="." method="_on_AudioButton_pressed"]

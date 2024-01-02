@@ -1,0 +1,74 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://art/bullet.png" type="Texture" id=1]
+[ext_resource path="res://Bullet.gd" type="Script" id=2]
+
+[sub_resource type="CircleShape2D" id=1]
+
+[sub_resource type="Animation" id=3]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("bulletCollisioner:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 34, -6 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 250, 0 ) ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "bulletAnim"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 250, 0 ) ]
+}
+
+[node name="Bullet" type="Node2D"]
+
+[node name="Bullet" type="Area2D" parent="." groups=["bullet"]]
+position = Vector2( 250, 0 )
+script = ExtResource( 2 )
+
+[node name="bulletSprite" type="Sprite" parent="Bullet"]
+position = Vector2( 34, -6 )
+scale = Vector2( 0.391, 0.391 )
+texture = ExtResource( 1 )
+
+[node name="bulletCollisioner" type="CollisionShape2D" parent="Bullet"]
+position = Vector2( 34, -6 )
+rotation = 3.14159
+scale = Vector2( 0.607771, 0.607771 )
+shape = SubResource( 1 )
+
+[node name="bulletAnimation" type="AnimationPlayer" parent="Bullet"]
+autoplay = "bulletAnim"
+anims/RESET = SubResource( 3 )
+anims/bulletAnim = SubResource( 2 )
+
+[connection signal="body_entered" from="Bullet" to="Bullet" method="_on_Bullet_body_entered"]
+[connection signal="animation_finished" from="Bullet/bulletAnimation" to="Bullet" method="_on_bulletAnimation_animation_finished"]
